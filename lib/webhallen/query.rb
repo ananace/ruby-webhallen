@@ -9,12 +9,12 @@ module Webhallen
         sortBy: :sales,
         filters: [],
         minPrice: 0,
-        maxPrice: 999999,
+        maxPrice: 999_999
       }
       @page = 1
     end
 
-    def with_category id
+    def with_category(id)
       @query[:filters] << {
         type: :category,
         value: id
@@ -22,7 +22,7 @@ module Webhallen
       self
     end
 
-    def with_text text
+    def with_text(text)
       @query[:filters] << {
         type: :text,
         value: text
@@ -30,13 +30,13 @@ module Webhallen
       self
     end
 
-    def with_price min: nil, max: nil
+    def with_price(min: nil, max: nil)
       @query[:minPrice] = min if min
       @query[:maxPrice] = max if max
       self
     end
 
-    def order_by type
+    def order_by(type)
       @query[:sortBy] = type
       self
     end
@@ -54,7 +54,7 @@ module Webhallen
 
     private
 
-    def convert_hash hash, path
+    def convert_hash(hash, path)
       Hash[hash.map do |key, value|
         if value.is_a? Array
           value.map.with_index do |v, i|
