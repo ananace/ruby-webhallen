@@ -4,7 +4,7 @@ module Webhallen
   class Product
     attr_reader :id, :name, :price, :stock, :release
 
-    def initialize id:, name:, price:, stock:, release:, **json
+    def initialize(id:, name:, price:, stock:, release:, **) # rubocop:disable Metrics/ParameterLists Taken from JSON, needs to extract the data in a sane way
       @id = id
       @name = name
       @price = price
@@ -12,7 +12,7 @@ module Webhallen
       @release = release
     end
 
-    def self.get_by_id id
+    def self.get_by_id(id)
       new(**JSON.parse(Net::HTTP.get(URI(File.join(Webhallen::BASE_URI, 'api', 'product', id.to_s))), symbolize_names: true)[:product])
     end
 
@@ -25,11 +25,11 @@ module Webhallen
     end
 
     def in_stock?
-      stock[:web].to_i > 0 || stock.any? { |key, value| key =~ /^\d+$/ && value.to_i > 0 }
+      stock[:web].to_i.positive? || stock.any? { |key, value| key =~ /^\d+$/ && value.to_i.positive? }
     end
 
     def available_at_supplier?
-      !stock[:supplier].nil? && stock[:supplier].to_i > 0
+      !stock[:supplier].nil? && stock[:supplier].to_i.positive?
     end
   end
 end
